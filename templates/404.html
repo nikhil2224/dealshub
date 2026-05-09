@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Page Not Found | DealsHub{% endblock %}
+
+{% block content %}
+<section class="section-pad">
+    <div class="container">
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <span class="display-1 fw-bold text-primary" style="opacity: 0.1; font-size: 8rem;">404</span>
+            </div>
+            <h1 class="display-4 fw-bold mb-3">Oops! Page not found.</h1>
+            <p class="lead text-muted mb-5">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'home' %}" class="btn btn-primary px-4 py-2 rounded-pill fw-bold">
+                    <i class="bi bi-house-fill me-2"></i>Back to Home
+                </a>
+                <a href="{% url 'all_deals' %}" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-bold">
+                    <i class="bi bi-search me-2"></i>Browse Deals
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
