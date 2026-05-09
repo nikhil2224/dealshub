@@ -4,6 +4,7 @@ Django settings for dealshub project.
 
 from pathlib import Path
 import os
+import shutil
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -58,10 +59,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dealshub.wsgi.application'
 
 # Database - SQLite (easy to switch to MySQL/PostgreSQL)
+db_path = BASE_DIR / 'db.sqlite3'
+
+# Vercel's filesystem is read-only. Copy the database to /tmp to allow SQLite to function.
+if os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_ENV'):
+    tmp_db_path = '/tmp/db.sqlite3'
+    if os.path.exists(db_path) and not os.path.exists(tmp_db_path):
+        shutil.copy2(db_path, tmp_db_path)
+    db_path = tmp_db_path
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': db_path,
         'OPTIONS': {
             'timeout': 20,
         }
