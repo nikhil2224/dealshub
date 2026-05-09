@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All Deals – Best Online Deals & Discounts | DealsHub{% endblock %}
+
+{% block content %}
+<div class="page-header-bar">
+    <div class="container">
+        <h1 class="page-header-title"><i class="bi bi-tags-fill me-2"></i>All Deals</h1>
+        <p class="page-header-sub">{{ total_deals }} deals found</p>
+    </div>
+</div>
+
+<section class="section-pad">
+<div class="container">
+    <!-- Filter Row -->
+    <form method="GET" action="{% url 'all_deals' %}" id="filterForm">
+        <div class="filter-bar mb-4">
+            <div class="row g-2 align-items-end">
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label fw-semibold small">Category</label>
+                    <select name="category" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.slug }}" {% if current_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label fw-semibold small">Store</label>
+                    <select name="store" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                        <option value="">All Stores</option>
+                        {% for store in stores %}
+                        <option value="{{ store.slug }}" {% if current_store == store.slug %}selected{% endif %}>{{ store.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label fw-semibold small">Sort By</label>
+                    <select name="sort" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                        <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest First</option>
+                            <option value="discount_high" {% if current_sort == 'discount_high' %}selected{% endif %}>Highest Discount First</option>
+                            <option value="discount_low" {% if current_sort == 'discount_low' %}selected{% endif %}>Lowest Discount First</option>
+                        <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="popular" {% if current_sort == 'popular' %}selected{% endif %}>Most Popular</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <a href="{% url 'all_deals' %}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-x-circle me-1"></i>Clear
+                    </a>
+                </div>
+                {% if search_q %}<input type="hidden" name="q" value="{{ search_q }}" />{% endif %}
+            </div>
+        </div>
+    </form>
+
+    <!-- Results -->
+    {% if page_obj %}
+    <div class="row g-4">
+        {% for deal in page_obj %}
+        <div class="col-12 col-sm-6 col-lg-3">{% include 'deals/_deal_card.html' with deal=deal %}</div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% include 'deals/_pagination.html' with page_obj=page_obj %}
+    {% else %}
+    <div class="empty-state text-center py-5">
+        <i class="bi bi-search display-1 text-muted"></i>
+        <h3 class="mt-3">No deals found</h3>
+        <p class="text-muted">Try adjusting your filters or <a href="{% url 'all_deals' %}">view all deals</a>.</p>
+    </div>
+    {% endif %}
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}DealsHub – Best Deals & Discounts Online | India{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero-section">
+    <div class="hero-bg-animation">
+        <span class="hero-circle hero-circle-1"></span>
+        <span class="hero-circle hero-circle-2"></span>
+        <span class="hero-circle hero-circle-3"></span>
+    </div>
+    <div class="container position-relative">
+        <div class="row align-items-center py-5">
+            <div class="col-lg-7 text-white">
+                <div class="hero-badge mb-3"><i class="bi bi-lightning-charge-fill me-1"></i> India's #1 Deal Aggregator</div>
+                <h1 class="hero-title">Find the Best<br/><span class="hero-highlight">Deals & Discounts</span><br/>Online</h1>
+                <p class="hero-subtitle">Compare prices across Amazon, Flipkart, Myntra & 50+ stores. Save up to <strong>80% off</strong>!</p>
+                <form action="{% url 'search' %}" method="GET" class="hero-search-form mt-4">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text hero-search-icon"><i class="bi bi-search"></i></span>
+                        <input type="text" name="q" class="form-control hero-search-input" placeholder="Search deals, products, stores..." />
+                        <button class="btn hero-search-btn" type="submit">Search Deals</button>
+                    </div>
+                </form>
+                <div class="hero-stats mt-4">
+                    <div class="hero-stat"><span class="hero-stat-number">10K+</span><span class="hero-stat-label">Active Deals</span></div>
+                    <div class="hero-stat"><span class="hero-stat-number">50+</span><span class="hero-stat-label">Top Stores</span></div>
+                    <div class="hero-stat"><span class="hero-stat-number">₹500Cr+</span><span class="hero-stat-label">Savings</span></div>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-flex justify-content-center">
+                <div class="hero-cards-float">
+                    <div class="hero-deal-card hdc-1"><i class="bi bi-phone-fill text-primary fs-3"></i><div><div class="fw-bold small">iPhone 15</div><div class="text-danger fw-bold">30% OFF</div></div></div>
+                    <div class="hero-deal-card hdc-2"><i class="bi bi-laptop-fill text-success fs-3"></i><div><div class="fw-bold small">Dell Laptop</div><div class="text-danger fw-bold">45% OFF</div></div></div>
+                    <div class="hero-deal-card hdc-3"><i class="bi bi-bag-fill text-warning fs-3"></i><div><div class="fw-bold small">Myntra Sale</div><div class="text-danger fw-bold">60% OFF</div></div></div>
+                    <div class="hero-deal-card hdc-4"><i class="bi bi-tv-fill text-danger fs-3"></i><div><div class="fw-bold small">Samsung TV</div><div class="text-danger fw-bold">25% OFF</div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-wave"><svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#f8f9fa"/></svg></div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section-pad bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-badge">Discover</span>
+            <h2 class="section-title">Shop by Category</h2>
+            <p class="section-sub">Find the best deals across your favorite categories</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% for cat in categories %}
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{% url 'category_deals' cat.slug %}" class="category-card">
+                    <div class="cat-icon" style="background:{{ cat.color }}15; color:{{ cat.color }};">
+                        <i class="bi {{ cat.icon }}"></i>
+                    </div>
+                    <span class="cat-name">{{ cat.name }}</span>
+                    <span class="cat-count">{{ cat.active_deals_count }} Active Deals</span>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED DEALS -->
+{% if featured_deals %}
+<section class="section-pad bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-5">
+            <div>
+                <span class="section-badge">⭐ Top Picks</span>
+                <h2 class="section-title mb-0">Featured Deals</h2>
+            </div>
+            <a href="{% url 'all_deals' %}" class="btn btn-apply">View All Deals <i class="bi bi-arrow-right ms-2"></i></a>
+        </div>
+        <div class="row g-4">
+            {% for deal in featured_deals %}
+            <div class="col-12 col-sm-6 col-lg-3">{% include 'deals/_deal_card.html' with deal=deal %}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- TOP STORES -->
+<section class="section-pad bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-badge">Partners</span>
+            <h2 class="section-title">Popular Stores</h2>
+            <p class="section-sub">Shop from the most trusted brands in India</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% for store in stores %}
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{% url 'store_deals' store.slug %}" class="store-card">
+                    {% if store.logo %}<img src="{{ store.logo.url }}" alt="{{ store.name }}" class="store-logo" />
+                    {% elif store.logo_url %}<img src="{{ store.logo_url }}" alt="{{ store.name }}" class="store-logo" />
+                    {% else %}<div class="store-name-text">{{ store.name }}</div>{% endif %}
+                    <div class="store-deal-count">{{ store.active_deals_count }} Deals</div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+    <div class="container">
+        <div class="newsletter-card">
+            <div class="row align-items-center">
+                <div class="col-lg-6 text-white mb-4 mb-lg-0">
+                    <div class="newsletter-icon"><i class="bi bi-envelope-heart-fill"></i></div>
+                    <h2 class="newsletter-title">Never Miss a Deal!</h2>
+                    <p class="newsletter-sub">Join 50,000+ smart shoppers getting top deals daily.</p>
+                    <div class="newsletter-perks">
+                        <span><i class="bi bi-check-circle-fill me-1"></i>Daily deal alerts</span>
+                        <span><i class="bi bi-check-circle-fill me-1"></i>Exclusive offers</span>
+                        <span><i class="bi bi-check-circle-fill me-1"></i>No spam ever</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <form action="{% url 'newsletter_signup' %}" method="POST" class="newsletter-form">
+                        {% csrf_token %}
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text newsletter-input-icon"><i class="bi bi-envelope-fill"></i></span>
+                            <input type="email" name="email" class="form-control newsletter-input" placeholder="Enter your email address" required />
+                        </div>
+                        <button type="submit" class="btn newsletter-btn w-100"><i class="bi bi-send-fill me-2"></i>Subscribe & Save Big!</button>
+                        <p class="newsletter-privacy mt-2"><i class="bi bi-shield-check me-1"></i>100% free. Unsubscribe anytime.</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHY DEALSHUB -->
+<section class="section-pad bg-light">
+    <div class="container">
+        <div class="text-center mb-5"><span class="section-badge">💡 Why Us</span><h2 class="section-title">Why Choose DealsHub?</h2></div>
+        <div class="row g-4 text-center">
+            <div class="col-md-3"><div class="why-card"><div class="why-icon" style="background:#eff6ff;color:#3b82f6;"><i class="bi bi-shield-check-fill"></i></div><h5>100% Verified Deals</h5><p>Every deal is manually verified. No expired or fake offers.</p></div></div>
+            <div class="col-md-3"><div class="why-card"><div class="why-icon" style="background:#fef3c7;color:#f59e0b;"><i class="bi bi-clock-fill"></i></div><h5>Real-Time Updates</h5><p>Deals updated multiple times daily. Always fresh, always relevant.</p></div></div>
+            <div class="col-md-3"><div class="why-card"><div class="why-icon" style="background:#f0fdf4;color:#10b981;"><i class="bi bi-wallet2"></i></div><h5>Maximum Savings</h5><p>Compare prices across 50+ stores and always get the best deal.</p></div></div>
+            <div class="col-md-3"><div class="why-card"><div class="why-icon" style="background:#fdf4ff;color:#a855f7;"><i class="bi bi-phone-fill"></i></div><h5>Mobile Friendly</h5><p>Fully optimized for mobile. Shop on the go, anytime.</p></div></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

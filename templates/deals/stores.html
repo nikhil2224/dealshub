@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}All Stores – Top E-Commerce Stores | DealsHub{% endblock %}
+
+{% block content %}
+<div class="page-header-bar" style="background: radial-gradient(circle at top left, #4338ca, #1e1b4b);">
+    <div class="container">
+        <h1 class="page-header-title">Browse by Store</h1>
+        <p class="page-header-sub">Find the best offers from India's most trusted online retailers</p>
+    </div>
+</div>
+
+<section class="section-pad bg-light">
+<div class="container">
+    <div class="row g-4">
+        {% for store in stores %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <a href="{% url 'store_deals' store.slug %}" class="store-card p-4">
+                <div class="store-logo-wrapper mb-3" style="height: 60px; display: flex; align-items: center; justify-content: center;">
+                    {% if store.logo %}<img src="{{ store.logo.url }}" alt="{{ store.name }}" class="store-logo" style="filter: none; opacity: 1; max-height: 50px;" />
+                    {% elif store.logo_url %}<img src="{{ store.logo_url }}" alt="{{ store.name }}" class="store-logo" style="filter: none; opacity: 1; max-height: 50px;" />
+                    {% else %}<div class="store-name-text">{{ store.name }}</div>{% endif %}
+                </div>
+                <div class="text-center">
+                    <h5 class="fw-bold text-dark mb-1">{{ store.name }}</h5>
+                    <div class="store-deal-count mb-3">{{ store.active_deals_count }} Active Deals</div>
+                    <span class="btn btn-outline-primary btn-sm rounded-pill px-3">Explore Store <i class="bi bi-arrow-right ms-1"></i></span>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</section>
+
+{% endblock %}

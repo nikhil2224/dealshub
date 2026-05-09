@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}DealsHub – Best Deals & Discounts in India{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Find the best deals, discount coupons and offers from Amazon, Flipkart, Myntra and more. Save big on every purchase!{% endblock %}" />
+    <meta name="keywords" content="deals, discounts, coupons, offers, Amazon, Flipkart, Myntra, online shopping India" />
+    <meta name="robots" content="index, follow" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}DealsHub – Best Deals & Discounts{% endblock %}" />
+    <meta property="og:description" content="Find the best deals and coupons from top Indian e-commerce stores." />
+    <meta property="og:type" content="website" />
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div class="topbar">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Affiliate Disclaimer: We earn a small commission when you shop through our links – at no extra cost to you!</span>
+            <div class="topbar-links">
+                <a href="{% url 'about' %}">About</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                <a href="{% url 'affiliate_disclaimer' %}">Disclaimer</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar navbar-expand-lg sticky-top" id="mainNav">
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <div class="logo-icon-bg"><i class="bi bi-lightning-charge-fill"></i></div>
+            <span class="logo-text">Deals<span class="logo-hub">Hub</span></span>
+        </a>
+
+        <!-- Desktop Store Icons -->
+        <div class="store-brand-icons d-none d-lg-flex align-items-center ms-4">
+            <a href="{% url 'store_deals' 'amazon' %}" class="brand-link float-animation" title="Amazon Deals"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" alt="Amazon"></a>
+            <a href="{% url 'store_deals' 'flipkart' %}" class="brand-link float-animation" style="animation-delay: 0.5s" title="Flipkart Deals"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Flipkart_Logo.svg/320px-Flipkart_Logo.svg.png" alt="Flipkart"></a>
+            <a href="{% url 'store_deals' 'myntra' %}" class="brand-link float-animation" style="animation-delay: 1s" title="Myntra Deals"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Myntra_Logo.png" alt="Myntra"></a>
+        </div>
+
+
+        <!-- Search Bar (Desktop) -->
+        <form class="d-none d-lg-flex nav-search-form mx-auto" action="{% url 'search' %}" method="GET">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="q" class="form-control" placeholder="Search for products or stores..." value="{{ search_q|default:'' }}" />
+                <button class="btn btn-primary-nav" type="submit">Search</button>
+            </div>
+        </form>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Categories</a>
+                    <ul class="dropdown-menu shadow-lg border-0">
+                        {% for cat in nav_categories %}
+                        <li><a class="dropdown-item" href="{% url 'category_deals' cat.slug %}"><i class="bi {{ cat.icon }} me-2" style="color:{{ cat.color }}"></i>{{ cat.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'all_deals' %}">All Deals</a>
+                </li>
+                <li class="nav-item ms-lg-3">
+                    <a href="#newsletter" class="btn btn-indigo-sm d-none d-lg-inline-block">Join Newsletter</a>
+                </li>
+            </ul>
+            <!-- Mobile Search -->
+            <form class="d-lg-none mt-3" action="{% url 'search' %}" method="GET">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search deals..." value="{{ search_q|default:'' }}" />
+                    <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+
+
+<!-- ── MESSAGES ── -->
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show custom-alert" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- ── MAIN CONTENT ── -->
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Brand -->
+            <div class="col-lg-4">
+                <div class="footer-brand">
+                    <a class="navbar-brand mb-3 d-inline-flex" href="{% url 'home' %}">
+                        <div class="logo-icon-bg"><i class="bi bi-lightning-charge-fill"></i></div>
+                        <span class="logo-text text-white">Deals<span class="logo-hub">Hub</span></span>
+                    </a>
+                    <p class="mb-4">Your ultimate destination for curated deals, exclusive coupons, and hand-picked offers from India's top online stores. Save more on every click.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-4">
+                <h6 class="footer-heading">Company</h6>
+                <ul class="footer-links">
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'all_deals' %}">All Deals</a></li>
+                    <li><a href="{% url 'all_stores' %}">Top Stores</a></li>
+                </ul>
+            </div>
+            <!-- Legal -->
+            <div class="col-lg-2 col-md-4">
+                <h6 class="footer-heading">Legal</h6>
+                <ul class="footer-links">
+                    <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                    <li><a href="{% url 'terms' %}">Terms of Service</a></li>
+                    <li><a href="{% url 'affiliate_disclaimer' %}">Affiliate Disclosure</a></li>
+                </ul>
+            </div>
+            <!-- Newsletter -->
+            <div class="col-lg-4 col-md-4" id="newsletter">
+                <h6 class="footer-heading">Join the Club</h6>
+                <p class="small mb-3">Get the hottest deals delivered straight to your inbox daily.</p>
+                <form action="{% url 'newsletter_signup' %}" method="POST" class="footer-newsletter">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="email" name="email" class="form-control" placeholder="Email address" required />
+                        <button class="btn btn-primary" type="submit">Join</button>
+                    </div>
+                </form>
+                <div class="mt-3 small text-muted"><i class="bi bi-shield-check me-1"></i> No spam, only savings.</div>
+            </div>
+        </div>
+        <hr class="footer-divider" />
+        <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <p class="mb-0">&copy; 2024 DealsHub. All rights reserved.</p>
+            <div class="affiliate-disclosure-footer">
+                <i class="bi bi-info-circle me-1"></i>
+                <span class="small">Affiliate Disclosure: We may earn a commission on purchases made through our links.</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- ── COOKIE CONSENT BANNER ── -->
+<div id="cookieConsent" class="cookie-banner" style="display:none;">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <i class="bi bi-cookie text-warning me-2 fs-5"></i>
+                <strong>We use cookies</strong> to enhance your experience, analyze site traffic, and serve personalized content.
+                <a href="{% url 'privacy_policy' %}" class="text-warning ms-1">Learn more</a>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-light btn-sm" onclick="declineCookies()">Decline</button>
+                <button class="btn btn-warning btn-sm" onclick="acceptCookies()"><i class="bi bi-check-circle me-1"></i>Accept All</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── BACK TO TOP ── -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i class="bi bi-arrow-up-short"></i>
+</button>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Custom JS -->
+<script src="{% static 'js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

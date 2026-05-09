@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Contact Us | DealsHub{% endblock %}
+
+{% block content %}
+<div class="page-header-bar" style="background: radial-gradient(circle at top left, #4338ca, #1e1b4b);">
+    <div class="container">
+        <h1 class="page-header-title">Contact Us</h1>
+        <p class="page-header-sub">Have questions or feedback? We're here to help!</p>
+    </div>
+</div>
+
+
+<section class="section-pad">
+<div class="container">
+<div class="row justify-content-center">
+<div class="col-lg-8">
+    <div class="contact-card">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="contact-info">
+                    <h5 class="fw-bold mb-4">Get In Touch</h5>
+                    <div class="contact-item"><div class="contact-icon"><i class="bi bi-envelope-fill"></i></div><div><strong>Email</strong><p>hello@dealshub.in</p></div></div>
+                    <div class="contact-item"><div class="contact-icon"><i class="bi bi-telephone-fill"></i></div><div><strong>Phone</strong><p>+91 98765 43210</p></div></div>
+                    <div class="contact-item"><div class="contact-icon"><i class="bi bi-geo-alt-fill"></i></div><div><strong>Location</strong><p>Mumbai, Maharashtra, India</p></div></div>
+                    <hr/>
+                    <h6 class="fw-bold">For Advertisers</h6>
+                    <p class="small text-muted">Want to list your deals on DealsHub? Contact us at <strong>partners@dealshub.in</strong></p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h5 class="fw-bold mb-4">Send a Message</h5>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Your Name *</label>
+                        <input type="text" name="name" class="form-control" placeholder="Enter your name" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Subject *</label>
+                        <input type="text" name="subject" class="form-control" placeholder="What's this about?" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message *</label>
+                        <textarea name="message" class="form-control" rows="5" placeholder="Your message here..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send-fill me-2"></i>Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</section>
+{% endblock %}

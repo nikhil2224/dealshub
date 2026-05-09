@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Redirecting to {{ deal.store.name }}... | DealsHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hide navigation and footer for a clean redirect experience */
+    nav, footer, .newsletter-section {
+        display: none !important;
+    }
+
+    body {
+        background: #0f172a;
+        color: white;
+        overflow: hidden;
+    }
+
+    .redirect-container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .store-logo-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin-bottom: 2rem;
+    }
+
+    .store-logo-inner {
+        width: 100%;
+        height: 100%;
+        background: white;
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .store-logo-inner img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .pulse-ring {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border: 4px solid #6366f1;
+        border-radius: 35px;
+        animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        z-index: 1;
+    }
+
+    @keyframes pulse-ring {
+        0% { transform: scale(0.95); opacity: 0.8; }
+        50% { transform: scale(1.05); opacity: 0.4; }
+        100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .redirect-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .redirect-subtitle {
+        color: #94a3b8;
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
+    }
+
+    .loader-bar {
+        width: 200px;
+        height: 4px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .loader-progress {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #6366f1, #a855f7);
+        border-radius: 10px;
+        animation: loading 2s ease-in-out forwards;
+    }
+
+    @keyframes loading {
+        0% { width: 0%; }
+        100% { width: 100%; }
+    }
+
+    .manual-link {
+        color: #6366f1;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+
+    .manual-link:hover {
+        color: #818cf8;
+        text-decoration: underline;
+    }
+
+    .footer-note {
+        position: fixed;
+        bottom: 2rem;
+        left: 0;
+        right: 0;
+        font-size: 0.85rem;
+        color: #475569;
+    }
+</style>
+<!-- Meta refresh as fallback -->
+<meta http-equiv="refresh" content="3;url={{ deal.affiliate_link }}">
+{% endblock %}
+
+{% block content %}
+<div class="redirect-container">
+    <div class="store-logo-wrapper">
+        <div class="pulse-ring"></div>
+        <div class="store-logo-inner">
+            {% if deal.store.logo %}
+                <img src="{{ deal.store.logo.url }}" alt="{{ deal.store.name }}">
+            {% elif deal.store.logo_url %}
+                <img src="{{ deal.store.logo_url }}" alt="{{ deal.store.name }}">
+            {% else %}
+                <i class="bi bi-shop fs-1 text-dark"></i>
+            {% endif %}
+        </div>
+    </div>
+
+    <h1 class="redirect-title">Hang tight!</h1>
+    <p class="redirect-subtitle">We're redirecting you to <strong>{{ deal.store.name }}</strong> for the best deal.</p>
+
+    <div class="loader-bar">
+        <div class="loader-progress"></div>
+    </div>
+
+    <p class="small text-muted">
+        Not redirected? <a href="{{ deal.affiliate_link }}" class="manual-link">Click here to continue</a>
+    </p>
+
+    <div class="footer-note">
+        <i class="bi bi-shield-check me-1"></i> Secure link verified by DealsHub
+    </div>
+</div>
+
+<script>
+    // JavaScript redirect
+    setTimeout(function() {
+        window.location.href = "{{ deal.affiliate_link|safe }}";
+    }, 2000);
+</script>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ deal.title }} – {{ deal.discount_percent }}% OFF | DealsHub{% endblock %}
+{% block meta_description %}Get {{ deal.title }} at ₹{{ deal.new_price }} (was ₹{{ deal.old_price }}). Save {{ deal.discount_percent }}% at {{ deal.store.name }} via DealsHub.{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-white">
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'category_deals' deal.category.slug %}">{{ deal.category.name }}</a></li>
+            <li class="breadcrumb-item active">{{ deal.title|truncatechars:40 }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <!-- Product Image -->
+        <div class="col-lg-6">
+            <div class="deal-detail-img-wrap p-4 bg-light rounded-4 border">
+                {% if deal.image %}<img src="{{ deal.image.url }}" alt="{{ deal.title }}" class="deal-detail-img img-fluid" />
+                {% elif deal.image_url %}<img src="{{ deal.image_url }}" alt="{{ deal.title }}" class="deal-detail-img img-fluid" onerror="this.src='{% static 'img/placeholder.png' %}'" />
+                {% else %}<img src="{% static 'img/placeholder.png' %}" alt="{{ deal.title }}" class="deal-detail-img img-fluid" />{% endif %}
+                <div class="deal-detail-discount-badge">{{ deal.discount_percent }}% OFF</div>
+            </div>
+            
+            <div class="affiliate-notice mt-4 p-3 rounded-3 border bg-light">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-shield-lock-fill text-primary fs-4"></i>
+                    <div>
+                        <div class="fw-bold text-dark small">Verified Deal</div>
+                        <div class="text-muted smaller">This deal has been manually verified by our team.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-lg-6">
+            <div class="deal-info-container">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <a href="{% url 'category_deals' deal.category.slug %}" class="badge-category" style="background:{{ deal.category.color }}15;color:{{ deal.category.color }}; border: 1px solid {{ deal.category.color }}30;">
+                        <i class="bi {{ deal.category.icon }} me-1"></i>{{ deal.category.name }}
+                    </a>
+                    <a href="{% url 'store_deals' deal.store.slug %}" class="badge-store">
+                        <i class="bi bi-shop me-1"></i>{{ deal.store.name }}
+                    </a>
+                </div>
+
+                <h1 class="deal-detail-title mb-4" style="font-size: 2.25rem; font-weight: 800; line-height: 1.2;">{{ deal.title }}</h1>
+
+                <div class="price-box p-4 rounded-4 bg-light border mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-7">
+                            <div class="text-muted small fw-bold text-uppercase mb-1">Deal Price</div>
+                            <div class="detail-new-price text-primary">₹{{ deal.new_price|floatformat:0 }}</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="detail-old-price text-muted">₹{{ deal.old_price|floatformat:0 }}</span>
+                                <span class="badge bg-success bg-opacity-10 text-success fw-bold">SAVE ₹{{ deal.savings|floatformat:0 }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                            <div class="discount-pill bg-danger text-white px-3 py-2 rounded-pill fw-bold d-inline-block">
+                                {{ deal.discount_percent }}% OFF
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if deal.description %}
+                <div class="deal-desc-section mb-4">
+                    <h5 class="fw-bold mb-2">Offer Description</h5>
+                    <p class="text-muted" style="line-height: 1.6;">{{ deal.description }}</p>
+                </div>
+                {% endif %}
+
+                <div class="meta-row d-flex gap-4 mb-4 pb-4 border-bottom">
+                    <div class="meta-item">
+                        <div class="text-muted small">Expires on</div>
+                        <div class="fw-bold"><i class="bi bi-calendar-event me-1"></i> {{ deal.expiry_date|date:"d M Y" }}</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="text-muted small">Clicks</div>
+                        <div class="fw-bold"><i class="bi bi-fire me-1 text-danger"></i> {{ deal.click_count }} grabbed</div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="cta-section mb-4">
+                    <a href="{% url 'track_click' deal.pk %}" target="_blank" rel="noopener noreferrer sponsored"
+                       class="btn btn-primary w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm mb-3">
+                        <i class="bi bi-lightning-charge-fill me-2"></i>Grab This Deal at {{ deal.store.name }}
+                    </a>
+                    <p class="text-center text-muted small"><i class="bi bi-info-circle me-1"></i>You will be redirected to the official store website.</p>
+                </div>
+
+                <!-- Share -->
+                <div class="share-box d-flex align-items-center gap-3">
+                    <span class="text-muted fw-bold small text-uppercase">Share this deal:</span>
+                    <div class="d-flex gap-2">
+                        <a href="https://wa.me/?text={{ deal.title }} – ₹{{ deal.new_price }}%0A{% url 'deal_detail' deal.slug %}" target="_blank" class="share-btn whatsapp"><i class="bi bi-whatsapp"></i></a>
+                        <a href="https://twitter.com/intent/tweet?text={{ deal.title }}&url={% url 'deal_detail' deal.slug %}" target="_blank" class="share-btn twitter"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={% url 'deal_detail' deal.slug %}" target="_blank" class="share-btn facebook"><i class="bi bi-facebook"></i></a>
+                        <button class="share-btn bg-light text-dark border" onclick="copyLink()" id="copyBtn"><i class="bi bi-link-45deg"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+
+<!-- Related Deals -->
+{% if related_deals %}
+<section class="section-pad bg-light">
+    <div class="container">
+        <h3 class="mb-4">More {{ deal.category.name }} Deals</h3>
+        <div class="row g-4">
+            {% for rdeal in related_deals %}
+            <div class="col-12 col-sm-6 col-lg-3">{% include 'deals/_deal_card.html' with deal=rdeal %}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href);
+    const btn = document.getElementById('copyBtn');
+    btn.innerHTML = '<i class="bi bi-check-lg"></i>';
+    btn.style.background = '#10b981';
+    setTimeout(() => { btn.innerHTML = '<i class="bi bi-link-45deg"></i>'; btn.style.background = ''; }, 2000);
+}
+</script>
+{% endblock %}

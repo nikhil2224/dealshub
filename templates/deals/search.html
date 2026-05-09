@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Search Results{% if search_q %} for "{{ search_q }}"{% endif %} | DealsHub{% endblock %}
+
+{% block content %}
+<div class="page-header-bar" style="background: radial-gradient(circle at top left, #4338ca, #1e1b4b);">
+    <div class="container">
+        <h1 class="page-header-title">Search Results</h1>
+        {% if search_q %}
+        <p class="page-header-sub">We found {{ total_results }} deals matching "{{ search_q }}"</p>
+        {% else %}
+        <p class="page-header-sub">Find the best deals across 50+ stores</p>
+        {% endif %}
+    </div>
+</div>
+
+<section class="section-pad">
+<div class="container">
+    <!-- Search Bar -->
+    <div class="filter-bar mb-5">
+        <form action="{% url 'search' %}" method="GET">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="q" class="form-control border-start-0" placeholder="What are you looking for today?" value="{{ search_q }}" autofocus />
+                <button class="btn btn-primary" type="submit">Search Deals</button>
+            </div>
+        </form>
+    </div>
+
+
+    {% if search_q %}
+        {% if page_obj %}
+        <div class="row g-4">
+            {% for deal in page_obj %}
+            <div class="col-12 col-sm-6 col-lg-3">{% include 'deals/_deal_card.html' with deal=deal %}</div>
+            {% endfor %}
+        </div>
+        {% include 'deals/_pagination.html' with page_obj=page_obj %}
+        {% else %}
+        <div class="empty-state text-center py-5">
+            <i class="bi bi-search display-1 text-muted"></i>
+            <h3 class="mt-3">No deals found for "{{ search_q }}"</h3>
+            <p class="text-muted">Try different keywords or <a href="{% url 'all_deals' %}">browse all deals</a>.</p>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-lightbulb display-1 text-warning"></i>
+        <h3 class="mt-3">What are you looking for?</h3>
+        <p class="text-muted">Search for deals on mobiles, laptops, fashion, shoes and more!</p>
+    </div>
+    {% endif %}
+</div>
+</section>
+{% endblock %}

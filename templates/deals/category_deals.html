@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}{{ category.name }} Deals – Best Discounts | DealsHub{% endblock %}
+
+{% block content %}
+<div class="page-header-bar" style="background: radial-gradient(circle at top left, {{ category.color }}, #1e1b4b);">
+    <div class="container">
+        <div class="category-icon-lg mb-3" style="background: {{ category.color }}20; color: #fff; width: 80px; height: 80px; border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto; border: 2px solid rgba(255,255,255,0.2);">
+            <i class="bi {{ category.icon }}"></i>
+        </div>
+        <h1 class="page-header-title">{{ category.name }} Deals</h1>
+        <p class="page-header-sub">{{ total_deals }} active offers today</p>
+    </div>
+</div>
+
+<section class="section-pad">
+<div class="container">
+    <!-- Filter Panel -->
+    <div class="filter-bar mb-5">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="other-cats">
+                    {% for cat in categories %}
+                    <a href="{% url 'category_deals' cat.slug %}" class="cat-pill {% if cat.pk == category.pk %}active{% endif %}" style="--cat-color: {{ cat.color }};">
+                        <i class="bi {{ cat.icon }} me-2"></i>{{ cat.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <form method="GET" class="d-inline-block">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-sort-down"></i></span>
+                        <select name="sort" class="form-select border-start-0" onchange="this.form.submit()">
+                            <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest First</option>
+                            <option value="discount_high" {% if current_sort == 'discount_high' %}selected{% endif %}>Highest Discount First</option>
+                            <option value="discount_low" {% if current_sort == 'discount_low' %}selected{% endif %}>Lowest Discount First</option>
+                            <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    {% if page_obj %}
+    <div class="row g-4">
+        {% for deal in page_obj %}
+        <div class="col-12 col-sm-6 col-lg-3">{% include 'deals/_deal_card.html' with deal=deal %}</div>
+        {% endfor %}
+    </div>
+    {% include 'deals/_pagination.html' with page_obj=page_obj %}
+    {% else %}
+    <div class="empty-state text-center py-5">
+        <i class="bi bi-emoji-frown display-1 text-muted"></i>
+        <h3 class="mt-3">No deals in this category yet</h3>
+        <p class="text-muted">Check back soon or <a href="{% url 'all_deals' %}">browse all deals</a>.</p>
+    </div>
+    {% endif %}
+</div>
+</section>
+{% endblock %}
