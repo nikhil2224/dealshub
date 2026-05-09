@@ -19,7 +19,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-db.sqlite3
+# db.sqlite3 removed for Vercel preview
 db.sqlite3-journal
 media/
 static_cdn/
