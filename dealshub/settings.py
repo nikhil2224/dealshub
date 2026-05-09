@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-dealshub-secret-key-change-in-production-2024'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*'] # Change this to your specific domain in production
 
@@ -62,6 +62,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+            'timeout': 20,
+        }
     }
 }
 
