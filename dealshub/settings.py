@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-dealshub-secret-key-change-in-production-2024'
 
-DEBUG = False
+DEBUG = os.environ.get('VERCEL') != '1'
 
 ALLOWED_HOSTS = ['*'] # Change this to your specific domain in production
 

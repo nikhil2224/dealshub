@@ -2,7 +2,7 @@
 {% block title %}Contact Us | DealsHub{% endblock %}
 
 {% block content %}
-<div class="page-header-bar" style="background: radial-gradient(circle at top left, #4338ca, #1e1b4b);">
+<div class="page-header-bar" style="background: radial-gradient(circle at top left, #4338ca, #1e1b4b);" data-anim="anim-fade-in">
     <div class="container">
         <h1 class="page-header-title">Contact Us</h1>
         <p class="page-header-sub">Have questions or feedback? We're here to help!</p>
@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-8">
                 <h5 class="fw-bold mb-4">Send a Message</h5>
-                <form method="POST">
+                <form method="POST" class="anim-fade-in" data-anim="anim-fade-in">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label class="form-label">Your Name *</label>
@@ -47,8 +47,13 @@
                         <label class="form-label">Message *</label>
                         <textarea name="message" class="form-control" rows="5" placeholder="Your message here..." required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send-fill me-2"></i>Send Message</button>
+                    <button type="submit" class="btn btn-primary w-100 btn-hover-scale"><i class="bi bi-send-fill me-2"></i>Send Message</button>
                 </form>
+                <!-- Our Mission Section -->
+                <div class="mt-5 anim-fade-in" data-anim="anim-fade-in">
+                    <h5 class="fw-bold mb-3">Our Mission</h5>
+                    <p>At DealsHub we strive to empower shoppers with the best deals across India, ensuring transparency, real‑time updates, and a seamless browsing experience.</p>
+                </div>
             </div>
         </div>
     </div>

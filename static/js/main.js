@@ -37,6 +37,26 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// Scroll-triggered animations
+const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const el = entry.target;
+            const anim = el.dataset.anim;
+            if (anim) {
+                el.classList.add(anim);
+            }
+            // Stop observing after animation applied
+            scrollObserver.unobserve(el);
+        }
+    });
+}, { threshold: 0.1 });
+
+// Observe all elements with data-anim attribute
+document.querySelectorAll('[data-anim]').forEach(el => {
+    scrollObserver.observe(el);
+});
+
 
 // Reveal on scroll
 const revealObserver = new IntersectionObserver((entries) => {

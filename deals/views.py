@@ -161,7 +161,6 @@ def all_stores(request):
 
 def search(request):
     q = request.GET.get('q', '').strip()
-    deals = []
     if q:
         deals = get_active_deals().filter(
             Q(title__icontains=q) |
@@ -169,6 +168,8 @@ def search(request):
             Q(store__name__icontains=q) |
             Q(category__name__icontains=q)
         )
+    else:
+        deals = Deal.objects.none()
     paginator = Paginator(deals, 12)
     page_obj = paginator.get_page(request.GET.get('page'))
 
@@ -183,8 +184,12 @@ def search(request):
 def track_click(request, deal_id):
     """Track affiliate link clicks and redirect."""
     deal = get_object_or_404(Deal, pk=deal_id, is_active=True)
-    # Track click
-    ip = request.META.get('REMOTE_ADDR')
+    # Track click - proxy aware for Vercel/Cloudflare
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
     ua = request.META.get('HTTP_USER_AGENT', '')
     DealClick.objects.create(deal=deal, ip_address=ip, user_agent=ua)
     deal.click_count += 1

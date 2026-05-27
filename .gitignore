@@ -21,7 +21,7 @@ wheels/
 *.egg
 # db.sqlite3 removed for Vercel preview
 db.sqlite3-journal
-media/
+# media/
 static_cdn/
 media_cdn/
 .env
@@ -31,3 +31,5 @@ ENV/
 .idea/
 .vscode/
 *.log
+
+staticfiles/

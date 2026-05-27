@@ -5,13 +5,14 @@
 
 {% block extra_css %}
 <style>
-    /* Hide navigation and footer for a clean redirect experience */
-    nav, footer, .newsletter-section {
+    /* Hide navigation, footer and topbar for a clean redirect experience */
+    nav, footer, .newsletter-section, .topbar {
         display: none !important;
     }
 
     body {
-        background: #0f172a;
+        background: #0f172a !important;
+        background-image: none !important;
         color: white;
         overflow: hidden;
     }

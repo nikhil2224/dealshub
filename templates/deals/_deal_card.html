@@ -12,7 +12,7 @@
             {% if deal.image %}
                 <img src="{{ deal.image.url }}" alt="{{ deal.title }}" class="deal-img" loading="lazy" />
             {% elif deal.image_url %}
-                <img src="{{ deal.image_url }}" alt="{{ deal.title }}" class="deal-img" loading="lazy" onerror="this.src='{% static 'img/placeholder.png' %}'" />
+                <img src="{{ deal.image_url }}" alt="{{ deal.title }}" class="deal-img" loading="lazy" onerror="this.onerror=null; this.src='{% static 'img/placeholder.png' %}';" />
             {% else %}
                 <img src="{% static 'img/placeholder.png' %}" alt="{{ deal.title }}" class="deal-img" />
             {% endif %}

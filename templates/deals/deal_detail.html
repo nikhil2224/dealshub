@@ -78,7 +78,10 @@
                 <div class="meta-row d-flex gap-4 mb-4 pb-4 border-bottom">
                     <div class="meta-item">
                         <div class="text-muted small">Expires on</div>
-                        <div class="fw-bold"><i class="bi bi-calendar-event me-1"></i> {{ deal.expiry_date|date:"d M Y" }}</div>
+                        <div class="fw-bold {% if deal.is_expired %}text-danger{% endif %}">
+                            <i class="bi {% if deal.is_expired %}bi-calendar-x-fill{% else %}bi-calendar-event{% endif %} me-1"></i>
+                            {% if deal.is_expired %}Expired ({{ deal.expiry_date|date:"d M Y" }}){% else %}{{ deal.expiry_date|date:"d M Y" }}{% endif %}
+                        </div>
                     </div>
                     <div class="meta-item">
                         <div class="text-muted small">Clicks</div>
@@ -88,10 +91,21 @@
 
                 <!-- CTA -->
                 <div class="cta-section mb-4">
+                    {% if deal.is_expired %}
+                    <div class="alert alert-danger py-2 small mb-3 rounded-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                        <div><strong>This deal has expired!</strong> The promotional price or discount may no longer be valid.</div>
+                    </div>
+                    <a href="{% url 'track_click' deal.pk %}" target="_blank" rel="noopener noreferrer sponsored"
+                       class="btn btn-secondary w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm mb-3">
+                        <i class="bi bi-patch-question-fill me-2"></i>Try Expired Deal anyway
+                    </a>
+                    {% else %}
                     <a href="{% url 'track_click' deal.pk %}" target="_blank" rel="noopener noreferrer sponsored"
                        class="btn btn-primary w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm mb-3">
                         <i class="bi bi-lightning-charge-fill me-2"></i>Grab This Deal at {{ deal.store.name }}
                     </a>
+                    {% endif %}
                     <p class="text-center text-muted small"><i class="bi bi-info-circle me-1"></i>You will be redirected to the official store website.</p>
                 </div>
 
