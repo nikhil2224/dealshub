@@ -33,3 +33,4 @@ ENV/
 *.log
 
 staticfiles/
+.vercel
